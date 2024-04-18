@@ -1,0 +1,29 @@
+<html>
+<head>
+    {{>header}}
+</head>
+<body class="container">
+    <h1>{{title}}</h1>
+    <h2>Donator Registration</h2>
+    <form method="post" role="/register">
+        <div class="form-group">
+            {{user-name-error}}
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="Enter user name" required>
+        </div>
+        <div class="form-group">
+            <label for="username">E-mail</label>
+            <input type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" class="form-control" id="email" name="email" placeholder="Enter your e-mail" required> {{! Regular expression to define e-mail input criteria.}}
+        </div>
+        <div class="form-group">
+                    {{! user-name-error maybe add an error thing here for a password validation}}
+
+            <label for="password">Password (8 characters minimum)</label>
+            <input type="password" class="form-control" id="pass" name="pass" placeholder="Enter password" minlength="8" required>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Register" class="btn btn-primary">
+        </div>
+    </form>
+</body>
+</html>

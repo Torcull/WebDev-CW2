@@ -1,0 +1,44 @@
+<html>
+{{>header}}
+<body>
+    <h1>{{title}}</h1>
+    <div >
+    <div class="text-right">
+        <a href="/donate" class="btn btn-primary">
+            Have extra food? Donate here!
+        </a>
+    </div>
+    <div class="text-right" style="margin-bottom: 1em;">
+    {{^user}}
+        <a id="login" href="/register" class="btn btn-primary">
+            Register
+        </a>
+        <a id="login" href="/login" class="btn btn-primary">
+            Login
+        </a>
+        {{/user}}
+        {{#user}}
+            <a id="logout" href="/logout" class="btn btn-primary">
+                Logout
+            </a>
+        {{/user}}
+    </div>
+        {{#foods}}
+            <div>
+                {{foodname}} 
+                <br>
+                {{description}}
+                <p>
+                    There are {{quantity}} and they go off in {{expiry}}
+                </p>
+                <p> Donated by <a href="/foods/{{donatorname}}">{{donatorname}}</a>
+            <div>
+            </div>
+            <hr>
+        {{/foods}}
+        {{^foods}}
+            No surplus food available.
+        {{/foods}}
+    </div>
+</body>
+</html>

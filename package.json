@@ -7,5 +7,18 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "keywords": [
+    "node.js",
+    "express"
+  ],
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bootstrap": "^5.3.3",
+    "express": "^4.19.2",
+    "gray-nedb": "^1.8.3",
+    "mustache-express": "^1.3.2",
+    "path": "^0.12.7",
+    "sqlite3": "^5.1.7"
+  }
 }
