@@ -4,10 +4,13 @@ const port = 3000;
 const app = express();
 const router = require("./routes/routes");
 const mustache = require("mustache-express");
+const cookieParser = require("cookie-parser");
+require("dotenv").config();
 
 const public = path.join(__dirname, "public");
 const bodyParser = require("body-parser");
 
+app.use(cookieParser());
 app.use("/css", express.static(__dirname + "/node_modules/bootstrap/dist/css"));
 app.engine("mustache", mustache());
 app.set("view engine", "mustache");
