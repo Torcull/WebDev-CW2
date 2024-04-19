@@ -24,10 +24,6 @@ exports.landing_page = function (req, res) {
     });
 };
 
-exports.register = function (req, res) {
-  res.render("user/register");
-};
-
 exports.apples = function (req, res) {
   res.send(
     "<h1>Guestbook Messages</h1><p>Not yet implemented: will show a list of guest book entries.</p>"
@@ -37,7 +33,7 @@ exports.apples = function (req, res) {
 
 exports.donate = function (req, res) {
   res.render("donate", {
-    title: "Donate",
+    title: "donate",
     user: "user",
   });
 };
@@ -74,7 +70,7 @@ exports.show_donator_foods = function (req, res) {
 };
 
 exports.register_page = function (req, res) {
-  return res.render("user/register");
+  return res.render("register");
 };
 
 exports.post_new_user = function (req, res) {
@@ -88,14 +84,14 @@ exports.post_new_user = function (req, res) {
     if (u) {
       return res.send(401, "User found:", user);
     }
-    userDAO.create(user, passowrd);
-    console.log("register user", user, "password", passowrd);
+    userDAO.create(user, password);
+    console.log("register user", user, "password", password);
     return res.redirect("/login");
   });
 };
 
 exports.login_page = function (req, res) {
-  return res.render("user/login");
+  return res.render("login");
 };
 
 exports.handle_login = function (req, res) {
@@ -106,5 +102,5 @@ exports.handle_login = function (req, res) {
 };
 
 exports.logout = function (req, res) {
-  return res.cleaCookie("jwt").status(200).redirect("/");
+  return res.clearCookie("jwt").status(200).redirect("/");
 };
