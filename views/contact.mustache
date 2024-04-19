@@ -1,0 +1,36 @@
+<html>
+{{>header}}
+<body class="container">
+{{>navbar}}
+    <div style="margin-bottom:2em;margin-left:1em;">
+        <h1> Get In Touch</h1>
+    </div>
+    <form action="https://formsubmit.co/ba95eeb1442b70f5d6e7dba65b94b0f8" method="POST">
+           <div class="form-group">
+                <label for="username" class="col-sm-2 col-formlabel">
+                    Title of Message
+                </label>
+                    <input type="text" id="title" name="Title" placeholder="Title" size="48" required>
+            </div>
+            <div class="form-group">
+                <label for="body" class="col-sm-2 col-formlabel">
+                    Body of Message
+                </label>
+                    <textarea type="text" id="body" name="Body" placeholder="Body" rows="4" cols="50"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="body" class="col-sm-2 col-formlabel">
+                    Your Contact E-Mail
+                </label>
+                    <input type="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" id="body" name="E-Mail" placeholder="E-Mail" size="48" required>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <label for="submit" class="col-sm-2 col-formlabel">
+                    </label>
+                    <input type="submit" value="Login" class="btn btn-primary" style="width:100px;">
+                </div>
+            </div>
+</form>
+</body>
+</html>

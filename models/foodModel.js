@@ -76,7 +76,7 @@ class Food {
         if (err) {
           reject(err);
         } else {
-          resolve(entries);
+          resolve(foods);
           console.log("getFoodsByDonator returns: ", foods);
         }
       });

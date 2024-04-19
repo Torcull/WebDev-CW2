@@ -3,7 +3,23 @@
         {{>header}}
     </head>
 <body class="container">
-<h2>Write a new entry</h2>
+<h2>Enter Donated Food Info</h2>
+{{>navbar}}
+    <div class="text-right" style="margin-bottom: 1em;">
+    {{^user}}
+        <a id="login" href="/register" class="btn btn-primary">
+            Register
+        </a>
+        <a id="login" href="/login" class="btn btn-primary">
+            Login
+        </a>
+        {{/user}}
+        {{#user}}
+            <a id="logout" href="/logout" class="btn btn-primary">
+                Logout
+            </a>
+        {{/user}}
+    </div>
     <form method="post" role="form" action="/donate">
         <div class="form-group">
             <label for="author">Food</label>
