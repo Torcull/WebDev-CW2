@@ -16,23 +16,29 @@ class UserDAO {
 
   init() {
     this.db.insert({
-      user: "Peter",
-      password: "$2b$10$I82WRFuGghOMjtu3LLZW9OAMrmYOlMZjEEkh.vx.K2MM05iu5hY2C",
+      user: "Admin",
+      password: "$2b$10$I82WRFuGghOMjtu3LLZW9OAMrmYOlMZjEEkh.vx.K2MM05iu5hY2C", //Peter
+      role: "admin",
     });
     this.db.insert({
-      user: "Ann",
-      password: "$2b$10$bnEYkqZM.MhEF/LycycymOeVwkQONq8kuAUGx6G5tF9UtUcaYDs3S",
+      user: "Pantry",
+      password: "$2b$10$bnEYkqZM.MhEF/LycycymOeVwkQONq8kuAUGx6G5tF9UtUcaYDs3S", //Ann
+      role: "pantry",
     });
-    return;
-    this;
+    return this;
   }
-  create(username, password) {
+
+  create(username, password, role) {
     const that = this;
     bcrypt.hash(password, saltRounds).then(function (hash) {
-      var entry = { user: username, password: hash };
+      var entry = {
+        user: username,
+        password: hash,
+        role: role,
+      };
       that.db.insert(entry, function (err) {
         if (err) {
-          console.log("Can't insert user:", username);
+          console.log("Can't insert user: ", username);
         }
       });
     });
@@ -47,6 +53,19 @@ class UserDAO {
         }
         return cb(null, entries[0]);
       }
+    });
+  }
+
+  getAllUsers() {
+    return new Promise((resolve, reject) => {
+      this.db.find({}, function (err, users) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(users);
+          console.log("funciton getAllUsers() returns: ", users); //get rid of all console.log when done.
+        }
+      });
     });
   }
 }

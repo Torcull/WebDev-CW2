@@ -12,6 +12,7 @@ exports.foods = function (req, res) {
         foods: list,
         title: "yes",
         activenav: "nav2",
+        user: "user",
       });
       console.log("promise resolved");
     })
@@ -24,7 +25,7 @@ exports.landing_page = function (req, res) {
     .then((list) => {
       res.render("home", {
         foods: list,
-        title: "yes",
+        title: "Home",
         activenav: "nav1",
         logo: "/public/TSPN_logo.png",
       });
@@ -96,6 +97,7 @@ exports.register_to_access = function (req, res) {
 exports.post_new_user = function (req, res) {
   const user = req.body.username;
   const password = req.body.pass;
+  const role = req.body.role;
 
   if (!user || !password) {
     return res.send(401, "no user or no password");
@@ -104,8 +106,28 @@ exports.post_new_user = function (req, res) {
     if (u) {
       return res.send(401, "User found:", user);
     }
-    userDAO.create(user, password);
-    console.log("register user", user, "password", password);
+    userDAO.create(user, password, role);
+    console.log("register user", user, "password", password, "role", role);
+  });
+};
+
+exports.post_new_user_register_page = function (req, res) {
+  const user = req.body.username;
+  const password = req.body.pass;
+  const role = req.body.role;
+
+  if (!user || !password) {
+    return res.send(401, "no user or no password");
+  }
+  if (role != "donator") {
+    return res.send(401, "error processing account");
+  }
+  userDAO.lookup(user, function (err, u) {
+    if (u) {
+      return res.send(401, "User found:", user);
+    }
+    userDAO.create(user, password, role);
+    console.log("register user", user, "password", password, "role", role);
     return res.redirect("/login");
   });
 };
@@ -141,8 +163,22 @@ exports.post_contact = function (req, res) {
   });
 };
 exports.about = function (req, res) {
-  return res.render("about");
+  return res.render("about", {
+    title: "About us",
+  });
 };
+exports.permission_denied_page = function (req, res) {
+  return res.render("permissionDenied", {
+    title: "Permission Denied",
+  });
+};
+
+exports.admin_page = function (req, res) {
+  return res.render("admin", {
+    title: "Admin Page",
+  });
+};
+
 exports.logout = function (req, res) {
   return res.clearCookie("jwt").status(200).redirect("/");
 };
