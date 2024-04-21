@@ -23,6 +23,6 @@ app.use("/", router);
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "./public")));
-app.listen(port, () => {
+app.listen((port, "0.0.0.0"), () => {
   console.log("Server listening on Port: " + port);
 });
