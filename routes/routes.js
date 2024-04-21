@@ -17,6 +17,8 @@ router.get("/loggedIn", verify, controller.loggedIn_landing);
 router.post("/donate", verify, controller.post_donation);
 router.get("/register", controller.register_page);
 router.post("/register", controller.post_new_user_register_page);
+router.get("/existingUser", controller.existing_user);
+router.post("/existingUser", controller.post_new_user_register_page);
 router.get("/registerToAccess", controller.register_to_access);
 router.get("/incorrectLogin", controller.incorrect_login);
 router.get("/about", controller.about);
@@ -24,6 +26,12 @@ router.get("/contact", controller.contact_page);
 router.post("/contact", controller.post_contact);
 router.get("/permissionDenied", controller.permission_denied_page);
 router.get("/admin", verifyAdmin, controller.admin_page);
+router.get("/select/:id", verifyPantry, controller.show_id_food);
+router.get("/confirm/:id", verifyPantry, controller.confirm_order);
+router.get("/adminConfirm/:user", verifyAdmin, controller.remove_user);
+router.get("/selectAdmin/:user", verifyAdmin, controller.confirm_remove_user);
+router.get("/adminNewUser", verifyAdmin, controller.admin_new_user);
+router.post("/adminNewUser", verifyAdmin, controller.post_admin_new_user);
 
 router.use(function (req, res) {
   res.status(404);

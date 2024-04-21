@@ -18,27 +18,18 @@ exports.login = function (req, res, next) {
       if (result) {
         let payload = { username: user.username, role: user.role };
         let accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: 300, // token expires in 5 minutes
+          expiresIn: 900, // token expires in 15 minutes
         });
         res.cookie("jwt", accessToken);
 
         if (payload.role == "donator") {
-          return res.render("donate", {
-            title: "Donate",
-            user: "user", //check if this user attribute is neccessary throughout
-          });
+          return res.redirect("/donate");
         }
         if (payload.role == "pantry") {
-          return res.render("food", {
-            title: "Available Foods",
-            user: "user", //check if this user attribute is neccessary throughout
-          });
+          return res.redirect("/foods");
         }
         if (payload.role == "admin") {
-          return res.render("admin", {
-            title: "Admin Panel",
-            user: "user", //check if this user attribute is neccessary throughout
-          });
+          return res.redirect("/admin");
         }
         next();
       } else {
@@ -62,10 +53,10 @@ exports.verify = function (req, res, next) {
 
 exports.verifyAdmin = function (req, res, next) {
   let accessToken = req.cookies.jwt;
-  let payload = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
   if (!accessToken) {
-    return res.redirect("permissionDenied");
+    return res.redirect("/permissionDenied");
   }
+  let payload = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
   if (payload.role != "admin") {
     return res.redirect("permissionDenied");
   }
@@ -73,22 +64,24 @@ exports.verifyAdmin = function (req, res, next) {
     payload = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
     next();
   } catch (e) {
-    res.status(401).send();
+    return res.redirect("permissionDenied");
   }
 };
 
 exports.verifyPantry = function (req, res, next) {
   let accessToken = req.cookies.jwt;
+  if (!accessToken) {
+    return res.redirect("/permissionDenied");
+  }
   let payload = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
   if (payload.role == "admin" || payload.role == "pantry") {
-    //check if this is correct the logic here.
     try {
       payload = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
       next();
     } catch (e) {
-      res.status(401).send();
+      return res.redirect("/permissionDenied");
     }
   } else {
-    return res.redirect("permissionDenied");
+    return res.redirect("/permissionDenied");
   }
 };

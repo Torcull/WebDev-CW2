@@ -4,31 +4,39 @@
     {{>navbar}}
     <h1>Admin Page</h1>
     <div>
-    <div class="text-right">
-        <a href="/donate" class="btn btn-primary">
-            Have extra food? Donate here!
-        </a>
-    </div>
     <div class="text-right" style="margin-bottom: 1em;">
 
     </div>
-        {{#foods}}
-            <div className="entries">
-                {{foodname}} 
-                <br>
-                {{description}}
-                <p>
-                    There are {{quantity}} and they go off in {{expiry}}
-                </p>
-                <p> Donated by <a href="/foods/{{donatorname}}">{{donatorname}}</a> </p>
-            </div>
-            </div>
-            <hr>
-        {{/foods}}
-        {{^foods}}
-            No donations available.
-        {{/foods}}
+        <div class="row">
+        <div class="col">
+        <h3>Users</h3>
+        <a id="addUser" href="/adminNewUser" class="btn btn-primary mb-5">Add User</a>
+        </div>
 
+        </div>
+
+        <br>
+        {{#users}}
+        
+        <div class="row  w-50 text-center mb-3">
+            <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Username: {{user}}</h4>
+                    <p class="card-text">
+                        Role: {{role}}
+                    </p>
+                </div>
+            </div>
+            </div>
+            <div class="col-4">
+                <a class="btn btn-primary h-100" href="/selectAdmin/{{user}}">Remove</a>
+            </div>
+        </div>
+        {{/users}}
+        {{^users}}
+            <p>No users found.</p>
+        {{/users}}
     </div>
 </body>
 </html>

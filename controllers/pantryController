@@ -10,7 +10,7 @@ exports.foods = function (req, res) {
     .then((list) => {
       res.render("food", {
         foods: list,
-        title: "yes",
+        title: "Available Foods For Your Pantry",
         activenav: "nav2",
         user: "user",
       });
@@ -27,7 +27,6 @@ exports.landing_page = function (req, res) {
         foods: list,
         title: "Home",
         activenav: "nav1",
-        logo: "/public/TSPN_logo.png",
       });
       console.log("promise resolved");
     })
@@ -36,16 +35,55 @@ exports.landing_page = function (req, res) {
     });
 };
 
-exports.apples = function (req, res) {
-  res.send(
-    "<h1>Guestbook Messages</h1><p>Not yet implemented: will show a list of guest book entries.</p>"
-  );
-  db.getApples();
+exports.show_id_food = function (req, res) {
+  console.log("filtering id", req.params.id);
+  let id = req.params.id;
+  db.getFoodsById(id)
+    .then((list) => {
+      return res.render("select", {
+        foods: list,
+        title: "Food Confirmation",
+        user: "user",
+      });
+    })
+    .catch((err) => {
+      console.log("error handling donator's donations,", err);
+    });
 };
 
+exports.confirm_remove_user = function (req, res) {
+  console.log("filtering user", req.params.user);
+  let user = req.params.user;
+  userDAO
+    .getUserByName(user)
+    .then((list) => {
+      return res.render("adminConfirm", {
+        users: list,
+      });
+    })
+    .catch((err) => {
+      console.log("error handling donator's donations,", err);
+    });
+};
+
+exports.confirm_order = function (req, res) {
+  let id = req.params.id;
+  db.DeleteFoodById(id).then(() => {
+    return res.render("thankyou", {
+      pantry: "pantry",
+    });
+  });
+};
+
+exports.remove_user = function (req, res) {
+  let user = req.params.user;
+  userDAO.DeleteUserByName(user).then(() => {
+    return res.redirect("/admin");
+  });
+};
 exports.donate = function (req, res) {
   return res.render("donate", {
-    title: "donate",
+    title: "Donate",
     user: "user",
     activenav: "nav3",
   });
@@ -64,7 +102,9 @@ exports.post_donation = function (req, res) {
     req.body.expiry,
     req.body.donatorname
   );
-  return res.redirect("/loggedIn");
+  return res.render("thankyou", {
+    donator: "donator",
+  });
 };
 
 exports.show_donator_foods = function (req, res) {
@@ -74,7 +114,7 @@ exports.show_donator_foods = function (req, res) {
     .then((foods) => {
       console.log(foods);
       return res.render("food", {
-        title: "Donated Food from " + donator,
+        title: "Donated Food From " + donator,
         foods: foods,
         user: "user",
       });
@@ -90,25 +130,14 @@ exports.register_page = function (req, res) {
   });
 };
 
-exports.register_to_access = function (req, res) {
-  return res.render("registerToAccess");
+exports.existing_user = function (req, res) {
+  return res.render("existingUser", {
+    activenav: "nav7",
+  });
 };
 
-exports.post_new_user = function (req, res) {
-  const user = req.body.username;
-  const password = req.body.pass;
-  const role = req.body.role;
-
-  if (!user || !password) {
-    return res.send(401, "no user or no password");
-  }
-  userDAO.lookup(user, function (err, u) {
-    if (u) {
-      return res.send(401, "User found:", user);
-    }
-    userDAO.create(user, password, role);
-    console.log("register user", user, "password", password, "role", role);
-  });
+exports.register_to_access = function (req, res) {
+  return res.render("registerToAccess");
 };
 
 exports.post_new_user_register_page = function (req, res) {
@@ -124,11 +153,33 @@ exports.post_new_user_register_page = function (req, res) {
   }
   userDAO.lookup(user, function (err, u) {
     if (u) {
-      return res.send(401, "User found:", user);
+      return res.redirect("existingUser");
     }
     userDAO.create(user, password, role);
     console.log("register user", user, "password", password, "role", role);
     return res.redirect("/login");
+  });
+};
+
+exports.admin_new_user = function (req, res) {
+  return res.render("addUserAdmin");
+};
+
+exports.post_admin_new_user = function (req, res) {
+  const user = req.body.username;
+  const password = req.body.pass;
+  const role = req.body.role;
+
+  if (!user || !password) {
+    return res.send(401, "no user or no password");
+  }
+  userDAO.lookup(user, function (err, u) {
+    if (u) {
+      return res.send(401, "User found:", user); //could redirect to user already found
+    }
+    userDAO.create(user, password, role);
+    console.log("register user", user, "password", password, "role", role);
+    return res.redirect("/admin");
   });
 };
 
@@ -170,13 +221,23 @@ exports.about = function (req, res) {
 exports.permission_denied_page = function (req, res) {
   return res.render("permissionDenied", {
     title: "Permission Denied",
+    user: "user",
   });
 };
 
 exports.admin_page = function (req, res) {
-  return res.render("admin", {
-    title: "Admin Page",
-  });
+  userDAO
+    .getAllUsers()
+    .then((list) => {
+      return res.render("admin", {
+        title: "Admin Page",
+        users: list,
+        user: "user",
+      });
+    })
+    .catch((err) => {
+      console.log("promise rejected", err);
+    });
 };
 
 exports.logout = function (req, res) {
@@ -184,16 +245,5 @@ exports.logout = function (req, res) {
 };
 
 exports.loggedIn_landing = function (req, res) {
-  db.getAllfoods()
-    .then((list) => {
-      res.render("food", {
-        foods: list,
-        title: "HELLO WORLD!!!!",
-        user: "user",
-      });
-      console.log("promise resolved");
-    })
-    .catch((err) => {
-      console.log("promise rejected", err);
-    });
+  res.redirect("/");
 };

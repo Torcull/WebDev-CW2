@@ -1,29 +1,31 @@
 <html>
 {{>header}}
-<body class="container">
-    {{>navbar}}
+<body class="container text-center">
     <h1>{{title}}</h1>
     <div>
+    <div class="text-right">
+    </div>
     <div class="text-right" style="margin-bottom: 1em;">
 
     </div>
         {{#foods}}
             <div className="entries">
-            <a class="btn btn=primary" style="background-color:cyan;" href="/select/{{id}}">
+
                 {{foodname}} 
                 <br>
                 {{description}}
                 <p>
                     There are {{quantity}} and they go off in {{expiry}}
                 </p>
-            </a>
                 <p> Donated by <a href="/foods/{{donatorname}}">{{donatorname}}</a> </p>
             </div>
             </div>
             <hr>
+            <a href="/foods" class="btn btn-primary">Cancel</a>
+            <a href="/confirm/{{id}}" class="btn btn-primary">Confirm</a>
         {{/foods}}
         {{^foods}}
-            No donations available.
+            <h1>Id not Found</h1>
         {{/foods}}
 
     </div>

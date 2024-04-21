@@ -1,0 +1,13 @@
+<html>
+{{>header}}
+<body class="container text-center">
+    {{#pantry}}
+    <h1> Thank you! Please collect from the local depot.</h1>
+    <a class="btn btn-primary" href="/">Close</a>
+    {{/pantry}}
+    {{#donator}}
+    <h1> Thank you! Please drop this off to the local depot.</h1>
+    <a class="btn btn-primary" href="/donate">Close</a>
+    {{/donator}}
+</body>
+</html>

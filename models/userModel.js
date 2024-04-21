@@ -25,6 +25,7 @@ class UserDAO {
       password: "$2b$10$bnEYkqZM.MhEF/LycycymOeVwkQONq8kuAUGx6G5tF9UtUcaYDs3S", //Ann
       role: "pantry",
     });
+
     return this;
   }
 
@@ -68,7 +69,32 @@ class UserDAO {
       });
     });
   }
+
+  getUserByName(user) {
+    return new Promise((resolve, reject) => {
+      this.db.find({ user: user }, function (err, users) {
+        if (err) {
+          reject(err);
+        }
+        resolve(users);
+        console.log("function all() returns: ", users);
+      });
+    });
+  }
+
+  DeleteUserByName(user) {
+    return new Promise((resolve, reject) => {
+      this.db.remove({ user: user }, function (err, foods) {
+        if (err) {
+          reject(err);
+        }
+        resolve(foods);
+        console.log("function all() returns: ", foods);
+      });
+    });
+  }
 }
+
 const dao = new UserDAO();
 dao.init();
 module.exports = dao;

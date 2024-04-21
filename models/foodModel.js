@@ -1,4 +1,15 @@
 const nedb = require("gray-nedb");
+let today = new Date().toISOString().split("T")[0];
+today = today.replace(/-/g, "");
+parseInt(today);
+
+function formatDate(inputDate) {
+  const year = inputDate.substring(0, 4);
+  const month = inputDate.substring(4, 6);
+  const day = inputDate.substring(6, 8);
+  console.log("here is the thing " + `${day}/${month}/${year}`);
+  return `${day}/${month}/${year}`;
+}
 
 class Food {
   constructor(dbFilePath) {
@@ -15,7 +26,7 @@ class Food {
       foodname: "Apples",
       description: "mostly red",
       quantity: "7kg",
-      expiry: "20/4/24",
+      expiry: "1415299200000",
     });
     console.log("apples inserted");
 
@@ -23,44 +34,50 @@ class Food {
       foodname: "Various carbs",
       description: "mostly bread",
       quantity: "8kg",
-      expiry: "25/4/24",
+      expiry: "1715299206000",
     });
+
+    this.db.insert({
+      foodname: "Various carbs4",
+      description: "mostly bread",
+      quantity: "8kg",
+      expiry: "1715299200000",
+    });
+
     console.log("carbs inserted");
+    console.log(today);
   }
   getAllfoods() {
     return new Promise((resolve, reject) => {
-      this.db.find({}, function (err, foods) {
+      this.db.find({ expiry: { $gte: today } }, function (err, foods) {
         if (err) {
           reject(err);
+        }
+        if (!foods) {
+          resolve(foods);
         } else {
+          for (let i = 0; i < foods.length; i++) {
+            foods[i].expiry = formatDate(foods[i].expiry);
+          }
           resolve(foods);
           console.log("function all() returns: ", foods);
         }
       });
     });
   }
-  getApples() {
-    return new Promise((resolve, reject) => {
-      this.db.find({ foodname: "Apples" }, function (err, food) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(food);
-          console.log("return ", food);
-        }
-      });
-    });
-  }
 
   addFood(foodname, description, quantity, expiry, donatorname) {
+    var newExpiry = expiry.replace(/-/g, "");
+    parseInt(newExpiry);
+    var id = "id" + new Date().getTime();
     var food = {
+      id: id,
       foodname: foodname,
       description: description,
       quantity: quantity,
-      expiry: expiry,
+      expiry: newExpiry,
       donatorname: donatorname,
     };
-    console.log("food added", food);
     this.db.insert(food, function (err, doc) {
       if (err) {
         console.log("Error inserting document", subject); //remove these when finished
@@ -79,6 +96,30 @@ class Food {
           resolve(foods);
           console.log("getFoodsByDonator returns: ", foods);
         }
+      });
+    });
+  }
+
+  getFoodsById(id) {
+    return new Promise((resolve, reject) => {
+      this.db.find({ id: id }, function (err, foods) {
+        if (err) {
+          reject(err);
+        }
+        resolve(foods);
+        console.log("function all() returns: ", foods);
+      });
+    });
+  }
+
+  DeleteFoodById(id) {
+    return new Promise((resolve, reject) => {
+      this.db.remove({ id: id }, function (err, foods) {
+        if (err) {
+          reject(err);
+        }
+        resolve(foods);
+        console.log("function all() returns: ", foods);
       });
     });
   }
